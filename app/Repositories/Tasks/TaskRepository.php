@@ -3,9 +3,12 @@
 namespace App\Repositories\Tasks;
 
 use App\DTO\Tasks\TaskDTO;
+use App\DTO\Tasks\TaskFileDTO;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskRepository implements TaskRepositoryInterface
 {
@@ -24,7 +27,13 @@ class TaskRepository implements TaskRepositoryInterface
      */
     public function getAllTasks(): LengthAwarePaginator
     {
-        return $this->task->newQuery()->paginate(21);
+        return QueryBuilder::for(Task::class)
+                ->allowedFilters([
+                    AllowedFilter::exact('status'),
+                    AllowedFilter::exact('assigned_user_id'),
+                    AllowedFilter::exact('team_id'),
+                ])
+                ->paginate(request()->input('per_page', 21));
     }
 
     /**
@@ -79,8 +88,19 @@ class TaskRepository implements TaskRepositoryInterface
         return $task;
     }
 
-    public function addFileToTask()
+    /**
+     * @param Task $task
+     * @param TaskFileDTO $taskFileDTO
+     * @return Task
+     */
+    public function storeFiles(Task $task, TaskFileDTO $taskFileDTO): Task
     {
-        // TODO: Implement addFileToTask() method.
+        $task->files()->create([
+            'filename' => $taskFileDTO->filename,
+            'original_name' => $taskFileDTO->originalName,
+            'file_path' => $taskFileDTO->filePath,
+        ]);
+
+        return $task;
     }
 }

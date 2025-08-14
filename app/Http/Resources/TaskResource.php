@@ -15,13 +15,23 @@ class TaskResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
             'status' => $this->status,
-            'assigned_user_id' => $this->assigned_user_id,
-            'due_date' => $this->due_date?->format('Y-m-d'),
-            'team_id' => $this->team_id,
-            'created_by' => $this->created_by,
+            'assigned_user' => $this->whenLoaded('assignedUser', function () {
+                return UserResource::make($this->assignedUser);
+            }),
+            'due_date' => $this->due_date,
+            'team' => $this->whenLoaded('team', function () {
+                return TeamResource::make($this->team);
+            }),
+            'created_by' => $this->whenLoaded('createdBy', function () {
+                return UserResource::make($this->createdBy);
+            }),
+            'files' => $this->whenLoaded('files', function () {
+                return TaskFileResource::collection($this->files);
+            })
         ];
     }
 }

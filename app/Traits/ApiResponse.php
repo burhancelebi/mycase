@@ -2,17 +2,35 @@
 
 namespace App\Traits;
 
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 trait ApiResponse
 {
     /**
      * @param $data
-     * @param $status
+     * @param int $status
      * @return JsonResponse
      */
-    protected function successResponse($data = null, $status = 200): JsonResponse
+    protected function successResponse($data = null, int $status = 200): JsonResponse
     {
+        if ($data instanceof AnonymousResourceCollection
+            && $data->resource instanceof Paginator) {
+
+            return response()->json([
+                'success' => true,
+                'data' => $data->items(),
+                'pagination' => [
+                    'current_page' => $data->currentPage(),
+                    'last_page' => $data->lastPage(),
+                    'per_page' => $data->perPage(),
+                    'total' => $data->total(),
+                ],
+                'message' => 'İşlem başarılı'
+            ], $status);
+        }
+
         return response()->json([
             'success' => true,
             'data' => $data,

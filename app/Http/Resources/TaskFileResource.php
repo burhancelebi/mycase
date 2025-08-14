@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class TaskFileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +16,12 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'auth_token' => $this->whenHas('auth_token', function () {
-                return $this->auth_token;
-            })
+            'task' => $this->whenLoaded('task', function () {
+                return TaskResource::make($this->task);
+            }),
+            'filename' => $this->filename,
+            'original_name' => $this->original_name,
+            'file_path' => $this->file_path,
         ];
     }
 }

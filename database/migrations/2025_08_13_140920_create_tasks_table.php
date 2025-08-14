@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TaskStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('status')->default('pending');
+            $table->tinyInteger('status')->default(TaskStatusEnum::PENDING);
             $table->unsignedBigInteger('assigned_user_id')->nullable();
             $table->date('due_date')->nullable();
             $table->unsignedBigInteger('team_id')->nullable();

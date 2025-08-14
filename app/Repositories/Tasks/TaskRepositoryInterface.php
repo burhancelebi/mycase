@@ -3,6 +3,7 @@
 namespace App\Repositories\Tasks;
 
 use App\DTO\Tasks\TaskDTO;
+use App\DTO\Tasks\TaskFileDTO;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,6 +16,5 @@ interface TaskRepositoryInterface
     public function delete(Task $task): bool;
     public function findById(int $id): Task;
     public function assignTask(Task $task, User $user): Task;
-
-    public function addFileToTask();
+    public function storeFiles(Task $task, TaskFileDTO $taskFileDTO): Task;
 }

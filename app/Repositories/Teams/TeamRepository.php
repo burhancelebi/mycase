@@ -23,7 +23,7 @@ class TeamRepository implements TeamRepositoryInterface
      */
     public function all(): LengthAwarePaginator
     {
-        return $this->team->newQuery()->paginate(21);
+        return $this->team->newQuery()->paginate(request()->input('per_page', 21));
     }
 
     /**

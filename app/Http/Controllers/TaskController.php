@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Tasks\TaskDTO;
-use App\Http\Controllers\Controller;
+use App\Http\Requests\AssignTaskRequest;
+use App\Http\Requests\StoreTaskFileRequest;
 use App\Http\Requests\TaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Services\Tasks\TaskServiceInterface;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -38,35 +38,51 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request): JsonResponse
     {
-        $teamDto = TaskDTO::from($request);
-        $task = $this->taskService->create($teamDto);
+        $taskDto = TaskDTO::from($request->all());
+        $taskDto->created_by = $request->user()->id;
+        $task = $this->taskService->create($taskDto);
+        $task->load('createdBy', 'team', 'assignedUser');
         $resource = new TaskResource($task);
 
         return $this->successResponse($resource);
     }
 
     /**
-     * @param Request $request
-     * @param int $teamId
+     * @param TaskRequest $request
+     * @param int $taskId
      * @return JsonResponse
      */
-    public function addMember(Request $request, int $teamId): JsonResponse
+    public function update(TaskRequest $request, int $taskId): JsonResponse
     {
-        $team = $this->teamService->addMember($teamId, $request->get('user_id'));
-        $resource = new TeamResource($team);
+        $taskDto = TaskDTO::from($request->all());
+        $taskDto->created_by = $request->user()->id;
+        $task = $this->taskService->update($taskId, $taskDto);
+        $task->load('createdBy', 'team', 'assignedUser');
+        $resource = new TaskResource($task);
 
         return $this->successResponse($resource);
     }
 
     /**
      * @param int $teamId
-     * @param int $userId
      * @return JsonResponse
      */
-    public function removeMember(int $teamId, int $userId): JsonResponse
+    public function destroy(int $teamId): JsonResponse
     {
-        $team = $this->teamService->removeMember($teamId, $userId);
-        $resource = new TeamResource($team);
+        $this->taskService->delete($teamId);
+
+        return $this->successResponse();
+    }
+
+    /**
+     * @param StoreTaskFileRequest $request
+     * @param int $taskId
+     * @return JsonResponse
+     */
+    public function storeFile(StoreTaskFileRequest $request, int $taskId): JsonResponse
+    {
+        $task = $this->taskService->storeFiles($request, $taskId);
+        $resource = TaskResource::make($task);
 
         return $this->successResponse($resource);
     }
