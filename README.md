@@ -79,9 +79,9 @@ MAIL_FROM_NAME="MyCase Project"
 # Kurulum
 
 ## Projeyi klonlayın
-git clone https://github.com/burhancelebi/mycase.git
+```git clone https://github.com/burhancelebi/mycase.git```
 
-cd <project-folder>
+```cd <project-folder>```
 
 ## Bağımlılıkları yükleyin
 ```composer install```
