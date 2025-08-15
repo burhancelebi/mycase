@@ -58,13 +58,13 @@ class TeamService implements TeamServiceInterface
     }
 
     /**
-     * @param int $teamId
+     * @param Team $team
      * @param int $userId
      * @return Team
      */
-    public function addMember(int $teamId, int $userId): Team
+    public function addMember(Team $team, int $userId): Team
     {
-        $team = $this->teamRepository->find($teamId);
+        $team = $this->teamRepository->find($team->id);
         $user = $this->userService->getUserById($userId);
         $team->members()->attach($user);
 
@@ -72,13 +72,12 @@ class TeamService implements TeamServiceInterface
     }
 
     /**
-     * @param int $teamId
+     * @param Team $team
      * @param int $userId
      * @return Team
      */
-    public function removeMember(int $teamId, int $userId): Team
+    public function removeMember(Team $team, int $userId): Team
     {
-        $team = $this->teamRepository->find($teamId);
         $team->members()->detach($userId);
 
         return $team;

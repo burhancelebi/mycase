@@ -28,18 +28,4 @@ class LoginRequest extends FormRequest
             'password' => 'required|string',
         ];
     }
-
-    /**
-     * @param Validator $validator
-     * @return mixed
-     */
-    protected function failedValidation(Validator $validator): mixed
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
 }

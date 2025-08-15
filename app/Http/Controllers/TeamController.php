@@ -11,6 +11,7 @@ use App\Services\Users\UserServiceInterface;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TeamController extends Controller
 {
@@ -58,7 +59,9 @@ class TeamController extends Controller
      */
     public function addMember(Request $request, int $teamId): JsonResponse
     {
-        $team = $this->teamService->addMember($teamId, $request->get('user_id'));
+        $team = $this->teamService->getTeamById($teamId);
+        Gate::authorize('addMember', $team);
+        $this->teamService->addMember($team, $request->get('user_id'));
         $resource = new TeamResource($team);
 
         return $this->successResponse($resource);
@@ -71,7 +74,9 @@ class TeamController extends Controller
      */
     public function removeMember(int $teamId, int $userId): JsonResponse
     {
-        $team = $this->teamService->removeMember($teamId, $userId);
+        $team = $this->teamService->getTeamById($teamId);
+        Gate::authorize('removeMember', $team);
+        $this->teamService->removeMember($team, $userId);
         $resource = new TeamResource($team);
 
         return $this->successResponse($resource);

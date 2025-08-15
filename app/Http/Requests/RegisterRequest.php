@@ -29,18 +29,4 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:4|confirmed',
         ];
     }
-
-    /**
-     * @param Validator $validator
-     * @return mixed
-     */
-    protected function failedValidation(Validator $validator): mixed
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
 }

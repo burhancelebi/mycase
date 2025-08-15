@@ -48,18 +48,4 @@ class TaskRequest extends FormRequest
             'due_date' => 'nullable|date',
         ];
     }
-
-    /**
-     * @param Validator $validator
-     * @return mixed
-     */
-    protected function failedValidation(Validator $validator): mixed
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
 }

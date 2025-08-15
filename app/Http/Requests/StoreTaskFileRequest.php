@@ -28,18 +28,4 @@ class StoreTaskFileRequest extends FormRequest
             'files.*' => 'file|max:10240',
         ];
     }
-
-    /**
-     * @param Validator $validator
-     * @return mixed
-     */
-    protected function failedValidation(Validator $validator): mixed
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
 }

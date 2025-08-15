@@ -11,7 +11,7 @@ interface TeamServiceInterface
     public function getTeamById(int $id): ?Team;
     public function create(TeamDTO $teamDTO): Team;
     public function update(int $id, TeamDTO $teamDTO): Team;
-    public function addMember(int $teamId, int $userId): Team;
-    public function removeMember(int $teamId, int $userId): Team;
+    public function addMember(Team $team, int $userId): Team;
+    public function removeMember(Team $team, int $userId): Team;
     public function delete(int $id): bool;
 }

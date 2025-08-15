@@ -29,18 +29,4 @@ class TeamRequest extends FormRequest
             'owner_id'    => 'required|integer|exists:users,id',
         ];
     }
-
-    /**
-     * @param Validator $validator
-     * @return mixed
-     */
-    protected function failedValidation(Validator $validator): mixed
-    {
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'errors' => $validator->errors()
-            ], 422)
-        );
-    }
 }
