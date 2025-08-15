@@ -1,61 +1,108 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Ön Bilgilendirme
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bu task, **PHP 8.2** ve **Laravel 12** sürümleri kullanılarak geliştirilmiştir. Aşağıda proje çalıştırmadan önce bilmeniz gereken temel bilgiler yer almaktadır.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Sistem Gereksinimleri
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP: **8.2**
+- Veritabanı: MySQL, PostgreSQL
+- Laravel: **12**
+- Composer: **2.8.3**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Kullanılan Teknolojiler
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **PHP Sürümü:** 8.2
+- **Laravel Sürümü:** 12
+- **Veritabanı:** MySQL / PostgreSQL (Laravel tarafından desteklenen diğer RDBMS’ler de kullanılabilir)
+- **Queue Sistemi:** Laravel Queue (task atama ve bildirimler için)
+- **Event & Listener:** Görev atama ve tamamlanma bildirimleri için kullanılmıştır
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📧 Mail Ayarları
 
-## Laravel Sponsors
+Proje içerisinde **mail işlemleri** için [Mailtrap](https://mailtrap.io) servisi kullanılmaktadır.  
+Mailtrap, geliştirme ortamında gerçek mail göndermeden test yapmamıza olanak tanır.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Dikkat:** Bu projede yer alan `.env` dosyasındaki mail ayarları **kendi Mailtrap hesabınızın bilgileri ile** güncellenmelidir.  
+Kendi API anahtarınızı ve SMTP bilgilerinizi almak için:
+1. [Mailtrap](https://mailtrap.io) hesabı oluşturun.
+2. "Email Testing" bölümünde yeni bir Inbox oluşturun.
+3. SMTP ayarlarını kopyalayın.
 
-### Premium Partners
+`.env` dosyanızda aşağıdaki şekilde düzenleme yapın:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=YOUR_MAILTRAP_USERNAME
+MAIL_PASSWORD=YOUR_MAILTRAP_PASSWORD
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=example@example.com
+MAIL_FROM_NAME="MyCase Project"
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Önemli Notlar
 
-## Code of Conduct
+1. **API Odaklı Yapı:**
+    - Tüm yanıtlar JSON formatında döner.
+    - `success`, `message`, `data` alanları kullanılır.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Exception Yönetimi:**
+    - Laravel 12’nin `withExceptions()` yapısı kullanılarak tüm hatalar tek bir JSON şablonunda yönetilir.
+    - Hata mesajları ve HTTP durum kodları response içerisinde döner.
 
-## Security Vulnerabilities
+3. **Policy ve Yetkilendirme:**
+    - Takım işlemleri (üye ekleme/çıkarma) sadece takım sahibi (owner) tarafından yapılabilir.
+    - Laravel Policy kullanılarak yetkilendirme sağlanmıştır.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Task İşlemleri:**
+    - Görev atama ve tamamlanma işlemleri Event/Listener ve Queue sistemi üzerinden yönetilir.
+    - Listener nesnelerine ShouldQueue interface imlement edilmiştir ve bundan dolayı otomatik olarak kuyruk ile çalışacaktır.
 
-## License
+5. **Environment Ayarları:**
+    - `.env` dosyası üzerinden veritabanı, mail ve diğer servis bağlantıları tanımlanmalıdır.
+    - 
+6. **Authentication (Sanctum):**
+    - API endpoint’leri token tabanlı olarak korunmaktadır.
+    - Kullanıcı işlemleri için Laravel Sanctum kullanılmıştır.
+    - Her istek için geçerli token gereklidir.
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Kurulum
+
+## Projeyi klonlayın
+git clone https://github.com/burhancelebi/mycase.git
+
+cd <project-folder>
+
+## Bağımlılıkları yükleyin
+composer install
+
+## .env dosyasını oluşturun
+cp .env.example .env
+
+## Uygulama key'ini oluşturun
+php artisan key:generate
+
+## Veritabanı migrasyonlarını çalıştırın
+php artisan migrate
+
+## Kuyruk işlerini başlatın
+php artisan queue:work
+
+## Artisan Serve
+php artisan serve --port=8001
+
+# POSTMAN DOKÜMAN LİNKİ
+https://documenter.getpostman.com/view/13527177/2sB3BHk8ST
+
+Doküman linki açıldıktan sonra üst sağ köşede 
+**Run in Postman** seçeneği ile koleksiyon import edilebilir.

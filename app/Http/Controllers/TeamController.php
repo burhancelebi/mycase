@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Teams\TeamDTO;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\TeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Services\Teams\TeamServiceInterface;
-use App\Services\Users\UserServiceInterface;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
