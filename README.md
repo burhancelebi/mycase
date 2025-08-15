@@ -84,22 +84,22 @@ git clone https://github.com/burhancelebi/mycase.git
 cd <project-folder>
 
 ## Bağımlılıkları yükleyin
-composer install
+```composer install```
 
 ## .env dosyasını oluşturun
-cp .env.example .env
+```cp .env.example .env```
 
 ## Uygulama key'ini oluşturun
-php artisan key:generate
+```php artisan key:generate```
 
 ## Veritabanı migrasyonlarını çalıştırın
-php artisan migrate
+```php artisan migrate```
 
 ## Kuyruk işlerini başlatın
-php artisan queue:work
+```php artisan queue:work```
 
 ## Artisan Serve
-php artisan serve --port=8001
+```php artisan serve --port=8001```
 
 # POSTMAN DOKÜMAN LİNKİ
 https://documenter.getpostman.com/view/13527177/2sB3BHk8ST
